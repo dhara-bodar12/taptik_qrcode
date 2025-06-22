@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <option value="file">File</option>
                         <option value="radio">Radio</option>
                         <option value="checkbox">Checkbox</option>
+                        <option value="select">Select</option>
                     </select>
 
                     <label class="flex items-center gap-1 text-sm">
@@ -113,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // Show/hide options container for radio/checkbox
 function toggleOptionsInput(select, index) {
     const wrapper = document.getElementById(`field-options-${index}`);
-    if (['radio', 'checkbox'].includes(select.value)) {
+    if (['radio', 'checkbox', 'select'].includes(select.value)) {
         wrapper.classList.remove('hidden');
     } else {
         wrapper.classList.add('hidden');

@@ -28,11 +28,7 @@
                 <a href="{{ route('admin.offers.index') }}"
                    class="block px-4 py-2 rounded hover:bg-gray-100 text-gray-800 {{ request()->routeIs('offers.*') ? 'bg-gray-200 font-semibold' : '' }}">
                     Offers
-                </a>
-                <a href="{{ route('admin.offer.fields.index') }}"
-                   class="block px-4 py-2 rounded hover:bg-gray-100 text-gray-800 {{ request()->routeIs('offer.fields.*') ? 'bg-gray-200 font-semibold' : '' }}">
-                    Offer Fields
-                </a>
+                </a>                
                 <a href="{{ route('admin.offer.claims.index') }}"
                    class="block px-4 py-2 rounded hover:bg-gray-100 text-gray-800 {{ request()->routeIs('offer.claims.*') ? 'bg-gray-200 font-semibold' : '' }}">
                     Offer Claims

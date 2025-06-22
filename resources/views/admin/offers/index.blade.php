@@ -28,7 +28,7 @@
                     @foreach($offers as $offer)
                         <tr class="border-t">
                             <td class="p-2">{{ $loop->iteration }}</td>
-                            <td class="p-2">{{ $offer->type }}</td>
+                            <td class="p-2"><a href="{{ route('admin.offers.show', $offer->id) }}">{{ $offer->type }}</a></td>
                             <td class="p-2 space-x-2">
                                 <a href="{{ route('admin.offers.edit', $offer->id) }}" class="text-blue-600 hover:underline">Edit</a>
                                 <form action="{{ route('admin.offers.destroy', $offer->id) }}" method="POST" class="inline">

@@ -42,7 +42,7 @@
                             <select name="fields[{{ $index }}][type]" class="field-type border rounded px-2 py-1 w-1/5"
                                     onchange="toggleOptionsInput(this, {{ $index }})" required>
                                 <option value="">Type</option>
-                                @foreach(['text','email','number','textarea','date','datetime','tel','url','password','image','file','radio','checkbox'] as $type)
+                                @foreach(['text','email','number','textarea','date','datetime','tel','url','password','image','file','radio','checkbox' ,'select'] as $type)
                                     <option value="{{ $type }}" @selected($field->type === $type)>{{ ucfirst($type) }}</option>
                                 @endforeach
                             </select>
@@ -59,7 +59,7 @@
                         </div>
 
                         <!-- Options (radio/checkbox only) -->
-                        <div class="field-options {{ in_array($field->type, ['radio', 'checkbox']) ? '' : 'hidden' }} mt-2" id="field-options-{{ $index }}">
+                        <div class="field-options {{ in_array($field->type, ['radio', 'checkbox', 'select']) ? '' : 'hidden' }} mt-2" id="field-options-{{ $index }}">
                             <label class="block text-sm text-gray-700 mb-1">Options (Builder)</label>
                             <div class="options-list space-y-2 mb-2" data-index="{{ $index }}">
                                 @foreach($field->options ?? [] as $optIndex => $option)
@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <option value="file">File</option>
                         <option value="radio">Radio</option>
                         <option value="checkbox">Checkbox</option>
+                        <option value="select">Select</option>
                     </select>
 
                     <label class="flex items-center gap-1 text-sm">
