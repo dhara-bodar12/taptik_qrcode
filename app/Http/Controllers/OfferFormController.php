@@ -3,38 +3,83 @@
 namespace App\Http\Controllers;
 
 use App\Models\Offer;
+use App\Models\OfferClaim;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class OfferFormController extends Controller
 {
     public function show(Offer $offer)
+    {
+    	$offer->load('fields');
+        return view('offers.public_form', compact('offer'));
+    }
+
+    public function submit(Request $request, Offer $offer)
 	{
-	    return view('offers.public_form', compact('offer'));
-	}
+	    $fields = $offer->fields ?? [];
 
-	public function submit(Request $request, Offer $offer)
-	{
-	    $validated = [];
+	    $rules = [];
 
-	    foreach ($offer->fields as $field) {
-	        $rules = [];
+	    foreach ($fields as $field) {
+	        $fieldRules = [];
 
-	        if ($field['required']) $rules[] = 'required';
-
-	        switch ($field['type']) {
-	            case 'email': $rules[] = 'email'; break;
-	            case 'number': $rules[] = 'numeric'; break;
-	            case 'url': $rules[] = 'url'; break;
-	            // Add more validations as needed
+	        if (!empty($field['required'])) {
+	            $fieldRules[] = 'required';
+	        } else {
+	            $fieldRules[] = 'nullable';
 	        }
 
-	        $validated[$field['name']] = $rules;
+	        // Type-specific validation
+	        switch ($field['type']) {
+	            case 'email':
+	                $fieldRules[] = 'email';
+	                break;
+	            case 'number':
+	                $fieldRules[] = 'numeric';
+	                break;
+	            case 'url':
+	                $fieldRules[] = 'url';
+	                break;
+	            case 'file':
+	                $fieldRules[] = 'file';
+	                break;
+	            case 'image':
+	                $fieldRules[] = 'image';
+	                break;
+	        }
+
+	        $rules["submitted_data.{$field['name']}"] = $fieldRules;
 	    }
 
-	    $data = $request->validate($validated);
+	    // Base validation
+	    $validated = $request->validate(array_merge([
+	        'user_id' => 'nullable|integer',
+	        'submitted_data' => 'required|array',
+	    ], $rules));
 
-	    // Save submission logic here (optional)
+	    $submitted = [];
 
-	    return redirect()->back()->with('success', $offer->success_message ?? 'Submitted!');
+	    foreach ($fields as $field) {
+	        $name = $field['name'];
+
+	        if (in_array($field['type'], ['file', 'image']) && $request->hasFile("submitted_data.{$name}")) {
+	            $file = $request->file("submitted_data.{$name}");
+	            $path = $file->store("offers/{$offer->id}", 'public'); // stored in storage/app/public/offers/{id}
+	            $submitted[$name] = $path;
+	        } else {
+	            $submitted[$name] = $validated['submitted_data'][$name] ?? null;
+	        }
+	    }
+
+	    OfferClaim::create([
+	        'offer_id' => $offer->id,
+	        'user_id' => $validated['user_id'] ?? null,
+	        'submitted_data' => $submitted,
+	    ]);
+
+	    return response()->json([
+	        'message' => $offer->success_message ?? 'Offer submitted!',
+	    ]);
 	}
 }
