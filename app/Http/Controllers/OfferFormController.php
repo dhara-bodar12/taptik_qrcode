@@ -17,6 +17,17 @@ class OfferFormController extends Controller
 
     public function submit(Request $request, Offer $offer)
 	{
+		$today = now()->toDateString();
+
+		    if (
+		        ($offer->valid_from && $today < $offer->valid_from) ||
+		        ($offer->valid_until && $today > $offer->valid_until)
+		    ) {
+		        return response()->json([
+		            'message' => 'This offer is not currently valid.',
+		        ], 422); // Unprocessable Entity
+		    }
+		
 	    $fields = $offer->fields ?? [];
 
 	    $rules = [];

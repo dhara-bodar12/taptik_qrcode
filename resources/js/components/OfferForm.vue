@@ -12,6 +12,16 @@
       <span>{{ successMessage }}</span>
     </p>
 
+    <p v-if="errorMessage"
+       class="flex items-center gap-2 p-4 mt-4 text-red-800 bg-red-100 border border-red-300 rounded-lg shadow-sm transition-all duration-300">
+      <svg class="w-5 h-5 flex-shrink-0 text-red-600" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </p>
+
+
     <form @submit.prevent="submitForm" enctype="multipart/form-data">
       <input type="hidden" v-model="formData.user_id" />
 
@@ -90,6 +100,7 @@ export default {
       formData: {},
       errors: {},
       successMessage: '',
+      errorMessage: '',
       files: {}
     };
   },
@@ -131,12 +142,12 @@ export default {
         this.successMessage = res.data.message;
         this.errors = {};
       } catch (error) {
-        if (error.response?.status === 422) {
-          this.errors = error.response.data.errors || {};
+        if (error.response?.data?.message) {
+          this.errorMessage = error.response.data.message;
         } else {
-          alert('Form submission failed.');
-          console.error(error);
+          this.errorMessage = 'Something went wrong. Please try again.';
         }
+        this.successMessage = '';
       }
     }
   }

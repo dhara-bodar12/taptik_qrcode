@@ -20,6 +20,43 @@
                 </select>
             </div>
 
+            <!-- Offer Value -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Offer Value</label>
+                <input type="text" name="value" value="{{ old('value', $offer->value) }}"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+
+            <!-- Percentage (if applicable) -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Percentage (if applicable)</label>
+                <input type="number" name="percentage" value="{{ old('percentage', $offer->percentage) }}"
+                       min="1" max="100"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Valid From -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Valid From</label>
+                <input type="date" name="valid_from" value="{{ old('valid_from', $offer->valid_from) }}"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Valid Until -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Valid Until</label>
+                <input type="date" name="valid_until" value="{{ old('valid_until', $offer->valid_until) }}"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Terms & Conditions</label>
+                <textarea name="terms" rows="4"
+                          class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">{{ old('terms', $offer->terms) }}</textarea>
+            </div>
+
+            
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Success Message</label>
                 <input type="text" name="success_message" value="{{ old('success_message', $offer->success_message) }}"

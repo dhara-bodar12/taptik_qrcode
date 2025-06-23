@@ -11,8 +11,13 @@ class CreateOffersTable extends Migration
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // User who created the offer
-            $table->string('type');              // Discount, Cashback, etc.
-            $table->string('success_message');   // Shown after completion
+            $table->string('type'); 
+            $table->string('value');      
+            $table->integer('percentage')->nullable(); 
+            $table->date('valid_from')->nullable();
+            $table->date('valid_until')->nullable();
+            $table->text('terms')->nullable();             
+            $table->string('success_message');   
             $table->timestamps();
         });
     }
