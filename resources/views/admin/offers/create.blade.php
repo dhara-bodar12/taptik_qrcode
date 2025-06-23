@@ -23,6 +23,42 @@
                 @error('type') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
 
+            <!-- Offer Value -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Offer Value</label>
+                <input type="text" name="value"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                       required>
+            </div>
+
+            <!-- Percentage (Optional) -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Percentage (if applicable)</label>
+                <input type="number" name="percentage" min="1" max="100"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Valid From -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Valid From</label>
+                <input type="date" name="valid_from"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Valid Until -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Valid Until</label>
+                <input type="date" name="valid_until"
+                       class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Terms & Conditions</label>
+                <textarea name="terms" rows="4"
+                          class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Success Message</label>
                 <input type="text" name="success_message"

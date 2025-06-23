@@ -9,10 +9,25 @@ class Offer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'type', 'success_message'];
+	protected $fillable = [
+	    'user_id',
+	    'type',
+	    'value',
+	    'percentage',
+	    'valid_from',
+	    'valid_until',
+	    'terms',
+	    'success_message',
+	];
+
 
     public function fields()
     {
         return $this->hasMany(OfferField::class);
     }
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }

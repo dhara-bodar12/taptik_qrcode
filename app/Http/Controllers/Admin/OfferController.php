@@ -8,10 +8,34 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class OfferController extends Controller
-{
-    public function index()
+{   
+   public function index(Request $request)
     {
-        $offers = Offer::latest()->get();
+        $query = Offer::query()->with('user'); 
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('type', 'like', "%$search%")
+                  ->orWhere('value', 'like', "%$search%")
+                  ->orWhere('success_message', 'like', "%$search%")
+                  ->orWhereHas('user', fn($q2) => $q2->where('name', 'like', "%$search%"));
+            });
+        }
+
+        if ($request->filled('valid_from')) {
+            $query->whereDate('valid_from', '>=', $request->valid_from);
+        }
+
+        if ($request->filled('valid_until')) {
+            $query->whereDate('valid_until', '<=', $request->valid_until);
+        }
+
+        $sortBy = $request->get('sort_by', 'created_at');
+        $sortOrder = $request->get('sort_order', 'desc');
+
+        $offers = $query->orderBy($sortBy, $sortOrder)->paginate(10)->withQueryString();
+
         return view('admin.offers.index', compact('offers'));
     }
 
@@ -33,6 +57,11 @@ class OfferController extends Controller
     {
         $validated = $request->validate([
             'type' => 'required|string',
+            'value' => 'required|string',
+            'percentage' => 'nullable|integer|min:1|max:100',
+            'valid_from' => 'nullable|date',
+            'valid_until' => 'nullable|date|after_or_equal:valid_from',
+            'terms' => 'nullable|string',
             'success_message' => 'required|string',
             'fields' => 'nullable|array',
             'fields.*.label' => 'required|string',
@@ -47,6 +76,11 @@ class OfferController extends Controller
         $offer = Offer::create([
             'user_id' => Auth::id(),
             'type' => $validated['type'],
+            'value' => $validated['value'],
+            'percentage' => $validated['percentage'] ?? null,
+            'valid_from' => $validated['valid_from'] ?? null,
+            'valid_until' => $validated['valid_until'] ?? null,
+            'terms' => $validated['terms'] ?? null,
             'success_message' => $validated['success_message'],
         ]);
 
@@ -55,7 +89,6 @@ class OfferController extends Controller
 
             if (!empty($field['options']) && is_array($field['options'])) {
                 foreach ($field['options'] as $opt) {
-                    // Optional safety: check keys exist
                     if (!empty($opt['label']) && !empty($opt['value'])) {
                         $options[] = [
                             'label' => $opt['label'],
@@ -64,9 +97,6 @@ class OfferController extends Controller
                     }
                 }
             }
-
-            // You can dd here to confirm:
-             //dd($request->all(),$options,$field);  // Should show the options array correctly
 
             OfferField::create([
                 'offer_id' => $offer->id,
@@ -83,7 +113,6 @@ class OfferController extends Controller
 
     public function edit(Offer $offer)
     {
-        // Ensure fields are loaded (if using a relationship)
         $offer->load('fields');
 
         return view('admin.offers.edit', compact('offer'));
@@ -110,7 +139,6 @@ class OfferController extends Controller
             'success_message' => $validated['success_message'],
         ]);
 
-        // Delete old fields and recreate (or use a smarter sync if needed)
         $offer->fields()->delete();
 
         foreach ($validated['fields'] ?? [] as $field) {
@@ -131,7 +159,7 @@ class OfferController extends Controller
                 'name' => $field['name'],
                 'type' => $field['type'],
                 'required' => isset($field['required']),
-                'options' => $options, // Cast to JSON
+                'options' => $options, 
             ]);
         }
 
