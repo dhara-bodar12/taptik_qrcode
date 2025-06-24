@@ -42,7 +42,7 @@ class OfferController extends Controller
     public function show($id)
     {
         $offer = Offer::with('fields')->findOrFail($id);
-        $url = route('offers.public', $offer->id); 
+        $url = route('offers.public', [$offer->id, $offer->user_id]);
         $qrData = route('offers.redeem', $offer->id); // Example
 
         return view('admin.offers.show', compact('offer', 'qrData','url'));

@@ -17,7 +17,7 @@ use App\Http\Controllers\ProfileController;
 
 // ✅ Public Welcome Page
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // ✅ Admin Login Form (Blade View)
@@ -46,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/offers/redeem/{id}', [OfferController::class, 'redeem'])->name('offers.redeem');
-Route::get('/offers/{offer}', [App\Http\Controllers\OfferFormController::class, 'show'])->name('offers.public');
+Route::get('/offers/{offer}/{user}', [App\Http\Controllers\OfferFormController::class, 'show'])->name('offers.public');
 Route::post('/offers/{offer}', [App\Http\Controllers\OfferFormController::class, 'submit'])->name('offers.public.submit');
 
 
