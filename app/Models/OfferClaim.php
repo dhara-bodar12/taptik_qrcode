@@ -14,4 +14,14 @@ class OfferClaim extends Model
     protected $casts = [
         'submitted_data' => 'array',
     ];
+
+    public function offer()
+    {
+        return $this->belongsTo(Offer::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

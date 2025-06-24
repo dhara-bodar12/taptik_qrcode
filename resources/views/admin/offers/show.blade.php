@@ -43,10 +43,10 @@
         <strong>Success Message:</strong> {{ $offer->success_message }}
     </div>
 
-    <div style="text-align: center;">
+    <div >
         <strong>QR Code:</strong><br>
-        <center><img src="https://api.qrserver.com/v1/create-qr-code/?data={{ urlencode($url) }}&size=200x200" alt="QR Code"></center><br>
-        <p>Scan this code to visit our website!</p>
+        <center><img src="https://api.qrserver.com/v1/create-qr-code/?data={{ urlencode($url) }}&size=200x200" alt="QR Code"><br>
+        <p>This QR code is for offer redemption purposes only and is not for any transaction.</p></center>
     </div>
 
 
